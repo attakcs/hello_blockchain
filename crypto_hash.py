@@ -10,7 +10,7 @@ def crypto_hash(*args):
     Return a sha-256 hash of the given arguments.
     """
     # map() applying the given function to each item of a given iterable
-    # lambda is a anonymous function for a single expression.
+    # lambda is a function that can be declared inline
     stringified_args = sorted(map(lambda data : json.dumps(data), args))
     joined_data = ''.join(stringified_args)
 
