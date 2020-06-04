@@ -6,10 +6,10 @@ class Blockchain:
     Implemented as a lift of blocks - data sets of transactions 
     """
     def __init__(self):
-      self.chain = []
+      self.chain = [Block.genesis()]
     # push the instance of the Block in the chain list
     def add_block(self, data):
-        self.chain.append(Block(data))
+        self.chain.append(Block.mine_block(self.chain[-1], data))
     # returns the object representation
     def __repr__(self):
         return f"Blockchain: {self.chain}"
