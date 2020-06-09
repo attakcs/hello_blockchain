@@ -1,6 +1,8 @@
 import time
+
 # this is how to use packages + __init__.py
 from backend.util.crypto_hash import crypto_hash
+from backend.config import MINE_RATE
 
 GENESIS_DATA = {
     'timestamp': 1,
@@ -43,13 +45,14 @@ class Block:
         """
         timestamp = time.time_ns()
         last_hash = last_block.hash
-        difficulty = last_block.difficulty
+        difficulty = Block.adjust_difficulty(last_block, timestamp)
         nonce = 0
         hash = crypto_hash(timestamp, last_hash, data, difficulty, nonce)
 
         while hash[0:difficulty] != '0' * difficulty:
             nonce += 1
             timestamp = time.time_ns()
+            difficulty = Block.adjust_difficulty(last_block, timestamp)
             hash = crypto_hash(timestamp, last_hash, data, difficulty, nonce)
 
         return Block(timestamp, last_hash, hash, data, difficulty, nonce)
@@ -67,7 +70,22 @@ class Block:
         #     data=GENESIS_DATA['data']
         #     )
         return Block(**GENESIS_DATA)
-            
+
+    @staticmethod
+    def adjust_difficulty(last_block, new_timestamp):
+        """
+        Calculate the adjusted difficulty according to the MINE_RATE.
+        Increase the difficulty for quickly mined blocks.
+        Decrease the difficulty for slowly mined blocks.
+        """
+        if (new_timestamp - last_block.timestamp) < MINE_RATE:
+            return last_block.difficulty + 1
+        # in this way, you can not go to minus:
+        if (last_block.difficulty - 1) > 0:
+            return last_block.difficulty - 1
+
+        return 1
+
 def main():
     genesis_block = Block.genesis()
     block = Block.mine_block(genesis_block, 'foo')
