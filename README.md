@@ -1,7 +1,7 @@
 **Activate the virtual-environment**
 
 ```
-source blockchain-env/scripts/activate
+source blockchain-env/bin/activate
 ```
 
 **Install all packages**
