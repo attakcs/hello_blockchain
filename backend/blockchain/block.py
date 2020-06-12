@@ -3,6 +3,7 @@ import time
 # this is how to use packages + __init__.py
 from backend.util.crypto_hash import crypto_hash
 from backend.config import MINE_RATE
+from backend.util.hex_to_binary import hex_to_binary
 
 GENESIS_DATA = {
     'timestamp': 1,
@@ -28,34 +29,14 @@ class Block:
 
     def __repr__(self):
         return (
-            'Block('
-            f"timestamp: {self.timestamp}, "
-            f"last_hash: {self.last_hash}, "
-            f"hash: {self.hash}, "
-            f"data: {self.data}, "
-            f"difficulty: {self.difficulty}, "
+            'Block:(\n '
+            f"timestamp: {self.timestamp},\n "
+            f"last_hash: {self.last_hash},\n "
+            f"hash: {self.hash},\n "
+            f"data: {self.data},\n "
+            f"difficulty: {self.difficulty},\n "
             f"nonce: {self.nonce}) "
         )
-
-    @staticmethod
-    def mine_block(last_block, data):
-        """
-        Mine a block based on the given last_block and data, until a block hash
-        is found that meets the leading 0's proof of work requirement.
-        """
-        timestamp = time.time_ns()
-        last_hash = last_block.hash
-        difficulty = Block.adjust_difficulty(last_block, timestamp)
-        nonce = 0
-        hash = crypto_hash(timestamp, last_hash, data, difficulty, nonce)
-
-        while hash[0:difficulty] != '0' * difficulty:
-            nonce += 1
-            timestamp = time.time_ns()
-            difficulty = Block.adjust_difficulty(last_block, timestamp)
-            hash = crypto_hash(timestamp, last_hash, data, difficulty, nonce)
-
-        return Block(timestamp, last_hash, hash, data, difficulty, nonce)
 
     @staticmethod
     def genesis():
@@ -70,6 +51,7 @@ class Block:
         #     data=GENESIS_DATA['data']
         #     )
         return Block(**GENESIS_DATA)
+
 
     @staticmethod
     def adjust_difficulty(last_block, new_timestamp):
@@ -86,10 +68,31 @@ class Block:
 
         return 1
 
+    @staticmethod
+    def mine_block(last_block, data):
+        """
+        Mine a block based on the given last_block and data, until a block hash
+        is found that meets the leading 0's proof of work requirement.
+        """
+        timestamp = time.time_ns()
+        last_hash = last_block.hash
+        difficulty = Block.adjust_difficulty(last_block, timestamp)
+        nonce = 0
+        hash = crypto_hash(timestamp, last_hash, data, difficulty, nonce)
+
+        while hex_to_binary  (hash)[0:difficulty] != '0' * difficulty:
+            nonce += 1
+            timestamp = time.time_ns()
+            difficulty = Block.adjust_difficulty(last_block, timestamp)
+            hash = crypto_hash(timestamp, last_hash, data, difficulty, nonce)
+
+        return Block(timestamp, last_hash, hash, data, difficulty, nonce)
+
 def main():
     genesis_block = Block.genesis()
     block = Block.mine_block(genesis_block, 'foo')
     print(block)
 
+# execute only if run as a script
 if __name__ == "__main__":
     main()
