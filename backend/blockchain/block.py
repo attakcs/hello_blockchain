@@ -2,8 +2,8 @@ import time
 
 # this is how to use packages + __init__.py
 from backend.util.crypto_hash import crypto_hash
-from backend.config import MINE_RATE
 from backend.util.hex_to_binary import hex_to_binary
+from backend.config import MINE_RATE
 
 GENESIS_DATA = {
     'timestamp': 1,
@@ -20,23 +20,27 @@ class Block:
     Store transactions in a blockchain that supports a cryptocurrency.
     """
     def __init__(self, timestamp, last_hash, hash, data, difficulty, nonce):
-      self.timestamp = timestamp
-      self.last_hash = last_hash
-      self.hash = hash
-      self.data = data
-      self.difficulty = difficulty
-      self.nonce = nonce
+        self.timestamp = timestamp
+        self.last_hash = last_hash
+        self.hash = hash
+        self.data = data
+        self.difficulty = difficulty
+        self.nonce = nonce
 
     def __repr__(self):
         return (
-            'Block:(\n '
-            f"timestamp: {self.timestamp},\n "
-            f"last_hash: {self.last_hash},\n "
-            f"hash: {self.hash},\n "
-            f"data: {self.data},\n "
-            f"difficulty: {self.difficulty},\n "
-            f"nonce: {self.nonce}) "
+            'Block('
+            f'timestamp: {self.timestamp}, '
+            f'last_hash: {self.last_hash}, '
+            f'hash: {self.hash}, '
+            f'data: {self.data}, '
+            f'difficulty: {self.difficulty}, '
+            f'nonce: {self.nonce}) '
         )
+    
+    # compare the attributes of the instances
+    def __eq__(self, other):
+        return self.__dict__ == other.__dict__
 
     @staticmethod
     def genesis():
@@ -62,7 +66,7 @@ class Block:
         """
         if (new_timestamp - last_block.timestamp) < MINE_RATE:
             return last_block.difficulty + 1
-        # in this way, you can not go to minus:
+        # in this way, you cannot go to minus:
         if (last_block.difficulty - 1) > 0:
             return last_block.difficulty - 1
 
