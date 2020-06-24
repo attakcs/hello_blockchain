@@ -47,7 +47,14 @@ class Block:
         Serialize the block into a dictionary of its attributes
         """
         return self.__dict__
-        
+
+    @staticmethod
+    def from_json(block_json):
+        """
+        Deserialze a block's json representation back into a Block instance
+        """
+        return Block(**block_json)
+
     @staticmethod
     def genesis():
         """
