@@ -79,5 +79,13 @@ if os.environ.get('PEER') == 'True':
     except Exception as e:
         print(f'\n -- Error synchronizing: {e}')
 
+# This is for feeding the frontend with data:
+if os.environ.get('SEED_DATA') == 'True':
+    for i in range(10):
+        blockchain.add_block([
+            Transaction(Wallet(), Wallet().address, random.randint(2, 50)).to_json(),
+            Transaction(Wallet(), Wallet().address, random.randint(2, 50)).to_json()
+        ])
+
 # app.run(port=5001) <- change port
 app.run(port=PORT)
