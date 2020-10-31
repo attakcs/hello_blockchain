@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 import { FormControl, FormGroup, Button } from "react-bootstrap";
 import { API_BASE_URL } from "../config";
+import history from "../history";
 
 function ConductTransaction() {
   const [amount, setAmount] = useState(0);
-  const [recipient, setRecipient] = useState('');
+  const [recipient, setRecipient] = useState("");
   const [knownAddresses, setKnownAddresses] = useState([]);
 
   useEffect(() => {
     fetch(`${API_BASE_URL}/known-addresses`)
-      .then(response => response.json())
-      .then(json => setKnownAddresses(json));
+      .then((response) => response.json())
+      .then((json) => setKnownAddresses(json));
   }, []);
 
   const updateRecipient = (event) => {
@@ -32,12 +33,13 @@ function ConductTransaction() {
       .then((json) => {
         console.log("submitTransaction json", json);
         alert("Success!");
+        history.push('/transaction-pool');
       });
   };
 
   return (
     <div className="ConductTransaction">
-      <Link to='/'>Home</Link>
+      <Link to="/">Home</Link>
       <hr />
       <h3>Conduct a transaction</h3>
       <br />
@@ -65,13 +67,12 @@ function ConductTransaction() {
       <br />
       <h4>Known Addresses</h4>
       <div>
-        {
-          knownAddresses.map((knownAddress, i) => (
+        {knownAddresses.map((knownAddress, i) => (
           <span key={knownAddress}>
-            <u>{knownAddress}</u>{i !==knownAddresses.length -1 ? ', ' : ''}
+            <u>{knownAddress}</u>
+            {i !== knownAddresses.length - 1 ? ", " : ""}
           </span>
-          ))
-        }
+        ))}
       </div>
     </div>
   );
