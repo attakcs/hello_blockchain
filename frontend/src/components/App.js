@@ -19,7 +19,8 @@ function App() {
       <img className="logo" src={logo} alt="app-logo" />
       <br />
       <Link to='/blockchain'>Blockchain</Link>
-      <Link to='/conduct-transaction'>Conduct-transaction</Link>
+      <Link to='/conduct-transaction'>Conduct a Transaction</Link>
+      <Link to='/transaction-pool'>Transaction Pool</Link>
       <br />
       <div className="WalletInfo">
         <h3>Wallet info :</h3>
